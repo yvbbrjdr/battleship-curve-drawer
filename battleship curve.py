@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Kyler Natividad
 License: MIT
@@ -6,29 +8,30 @@ This is a simple script for creating battleship curves
 that I created for an archaeology class project.
 """
 
+import sys
+import importlib
 from matplotlib.pyplot import *
 from numpy import *
+
+conf = importlib.import_module(sys.argv[1])
 
 #################### Data ######################
 #Plug your values into here
 
-start_year = 1910
-year_increment = 20
+start_year = conf.start_year
+year_increment = conf.year_increment
 
-data = ["flowers",       [0, 2, 5, 7, 5],
-        "crosses",       [3, 4, 2, 1, 0],
-        "angel",         [0, 2, 7, 5, 2],
-        "star of david", [0, 0, 2, 2, 1]]
+data = conf.data
 
-filename = 'example.png'
+filename = sys.argv[1] + '.png'
 ################## Formating ###################
-percentage_markers = True
-border_color = 'black'
-fill_color = 'black'
-height = 0.9
-show_y_ticks = False
+percentage_markers = conf.percentage_markers
+border_color = conf.border_color
+fill_color = conf.fill_color
+height = conf.height
+show_y_ticks = conf.show_y_ticks
 
-preview_only = False
+preview_only = conf.preview_only
 ################################################
 
 labels = [data[i] for i in range(len(data)) if i%2 == 0]
@@ -69,16 +72,16 @@ for i in range(n_sets):
     if percentage_markers:
         for j in range(len(rects)):
             rect = rects[j]
-            
+
             percent_string = "{:.0f}%".format(100.0*percentages[i][j])
-            
+
             t = ax.text(0, 0, percent_string,
                         verticalalignment='center', weight='bold',
                         clip_on=True)
-            
+
             bb = t.get_window_extent(renderer=f.canvas.get_renderer())
             bb_coords = bb.transformed(axs[i].transData.inverted())
-        
+
             if (rect.get_width() > bb_coords.width+0.025):
                 x = rect.get_x() + rect.get_width()/2.0
                 clr = 'white'
@@ -88,7 +91,7 @@ for i in range(n_sets):
                 clr = 'black'
                 align = 'left'
             y = rect.get_y() + rect.get_height()/2.0
-            
+
             t.set_color(clr)
             t._x = x
             t._y = y
